@@ -3,12 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="image/png" sizes="16x16" rel="icon" href="/favicon-16.ico">
+    <link type="image/png" sizes="32x32" rel="icon" href="/favicon-32.ico">
+    <link type="image/png" sizes="96x96" rel="icon" href="/favicon-96.ico">
     <link rel="stylesheet" href="css/style.css">
-    <title>Веб-Лифт</title>
+    <title>Web-Elevator</title>
 </head>
 <body>
-    <div id="app">
-        <h1>{{ message }}</h1>
+    <div class="app" id="app">
+        <!-- "Крыша" -->
+        <header class="header">
+            <div class="header__wrapper">
+                <h1 class="logo">Web-Elevator</h1>
+                <button class="reset" v-on:click="reset()" title="Вернуться"></button>
+            </div>
+        </header>
+
+        <!-- Экран приветсвия -->
+        <section class="section section__settings" v-if="screen === 'main'">
+            <div class="settings">
+                <h2 class="settings__title">Выберите количество этажей</h2>
+                <input class="settings__input" type="number" placeholder="0" v-model="floors" min="2" max="20">
+                <button class="settings__button" v-on:click="createFloors()">Начать</button>
+            </div>
+        </section>
+
+        <!-- Экран лифта -->
+        <section class="section section__floors" v-show="screen === 'elevator'">
+            <!-- Лифт -->
+            <div class="elevator" id="elevator">
+                <div class="door door__left"></div>
+                <div class="door door__right"></div>
+            </div>
+            <!-- Этажи -->
+            <div class="floors__wrapper">
+                <div class="floor" v-for="(item, index) in floorsArray" :key="index">
+                    <div class="floor__wrapper">
+                        <span class="floor__number">{{ item }}</span>
+                        <button class="floor__button" v-on:click="callElevator(item)" title="Вызвать лифт"></button>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
     <script src="js/vue.global.js"></script>
     <script src="js/main.js"></script>
