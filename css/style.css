@@ -101,6 +101,7 @@ body {
     flex: 1;
     padding: 0 10px;
     justify-content: center;
+    gap: 30px;
     background: url("../images/brick-wall.avif");
 }
 
@@ -247,4 +248,24 @@ body {
 
 .door__right_open {
     transform: translateX(80px);
+}
+
+/* Стили ошибок */
+.errors {
+    max-width: 520px;
+    width: 100%;
+    height: auto;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 1rem;
+    background: #ff3636;
+}
+
+.error {
+    font-size: 24px;
+    font-family: 'Montserrat';
+    color: #FFF;
+    text-align: center;
 }

@@ -14,6 +14,7 @@ const app = {
             doorLeft: null,
             doorRight: null,
             statusMovement: null,
+            error: null,
         }
     },
     methods: {
@@ -29,6 +30,16 @@ const app = {
             this.doorLeft = null
             this.doorRight = null
             this.statusMovement = null
+        },
+        // Старт проекта
+        startProject() {
+            if (this.floors < 2) {
+                this.error = 'Количество этажей должно быть минимум 2'
+                console.log(this.error);
+            } else {
+                this.error = null
+                this.createFloors()
+            }
         },
         // Создание этажей
         createFloors() {
