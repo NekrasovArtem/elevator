@@ -92,11 +92,35 @@ const app = {
             console.log(`Вызвать на ${floorNumber} этаж`);
             this.floorsQueue.push(floorNumber)
 
+            // Сортировать очередь вызова лифта
+            this.sortQueue()
+
             // Запустить лифт, если он остановлен
             if (this.statusMovement !== true) {
                 this.statusMovement = true
                 this.moveElevator()
             }
+        },
+        // Сортировка очереди лифта по направлению
+        sortQueue() {
+            let floorsAbove = []
+            let floorsBelow = []
+
+            for (let i = 0; i < this.floorsQueue.length; i++) {
+                if (this.floorsQueue[i] > this.currentFloor) {
+                    floorsAbove.push(this.floorsQueue[i])
+                } else {
+                    floorsBelow.push(this.floorsQueue[i])
+                }
+            }
+
+            floorsAbove.sort((a, b) => a - b)
+            floorsBelow.sort((a, b) => a - b).reverse()
+            
+            this.floorsQueue = [
+                ...floorsAbove,
+                ...floorsBelow
+            ]
         },
         // Движение лифта
         moveElevator() {
