@@ -58,6 +58,8 @@ body {
 .logo {
     font-size: 32px;
     font-family: 'Montserrat';
+    font-weight: 600;
+    text-decoration: none;
     color: #FFF;
 }
 

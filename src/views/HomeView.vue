@@ -1,39 +1,44 @@
-<script>
-export default {
-  data() {
-    return {
-      floorsQuantity: null,
-      error: false
-    }
-  },
-  mounted() {
-    this.floorsQuantity = this.$refs.floorsQuantity.value
-  },
-  methods: {
-    startProject() {
-      this.floorsQuantity = this.$refs.floorsQuantity.value
-      console.log(this.floorsQuantity)
+<script setup>
+import { ref } from "vue";
+import { useRouter } from 'vue-router'
+import { storeToRefs } from "pinia";
+import { useElevatorStore } from "@/stores/elevator";
 
-      if (this.floorsQuantity < 2 || this.floorsQuantity > 20) {
-        this.error = true
-      } else {
-        this.error = false
-        this.$router.push('/about')
-      }
-    }
+const router = useRouter();
+
+const elevatorStore = useElevatorStore();
+const { floorsQuantity, floorsArray } = storeToRefs(elevatorStore);
+const { addFloors } = elevatorStore
+
+const error = ref(false);
+
+function startProject() {
+  if (floorsQuantity.value < 2 || floorsQuantity.value > 20) {
+    error.value = true;
+  } else {
+    error.value = false;
+    addFloors()
+    router.push("/shaft");
   }
 }
 </script>
 
 <template>
   <section class="section section__settings">
-    <div class="errors" v-if="error === true">
-        <span class="error">Количество этажей должно быть от 2 до 20</span>
+    <div class="errors" v-if="error">
+      <span class="error">Количество этажей должно быть от 2 до 20</span>
     </div>
     <div class="settings">
-        <h2 class="settings__title">Выберите количество этажей</h2>
-        <input class="settings__input" ref="floorsQuantity" type="number" placeholder="0">
-        <button class="settings__button" v-on:click="startProject()">Начать</button>
+      <h2 class="settings__title">Выберите количество этажей</h2>
+      <input
+        class="settings__input"
+        v-model="floorsQuantity"
+        type="number"
+        placeholder="0"
+      />
+      <button class="settings__button" @click="startProject()">
+        Начать
+      </button>
     </div>
   </section>
 </template>

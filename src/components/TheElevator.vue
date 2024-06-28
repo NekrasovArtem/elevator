@@ -1,23 +1,22 @@
-<script>
-export default {
-    data() {
-        return {
-            elevator: null,
-            leftDoor: null,
-            rightDoor: null,
-        }
-    },
-    mounted() {
-        this.elevator = this.$refs.elevator
-        this.leftDoor = this.$refs.leftDoor
-        this.rightDoor = this.$refs.rightDoor
-    }
-}
+<script setup>
+import { useElevatorStore } from "@/stores/elevator";
+import { storeToRefs } from "pinia";
+
+const elevatorStore = useElevatorStore();
+const { elevator, doorLeft, doorRight, transition, nextFloor } =
+  storeToRefs(elevatorStore);
 </script>
 
 <template>
-    <div class="elevator" id="elevator" ref="elevator">
-        <div class="door door__left" ref="leftDoor"></div>
-        <div class="door door__right" ref="rightDoor"></div>
-    </div>
+  <div
+    class="elevator"
+    ref="elevator"
+    :style="{
+      transition: `all ${transition}s ease-in-out`,
+      transform: `translateY(${(nextFloor - 1) * -200}px)`,
+    }"
+  >
+    <div class="door door__left" ref="doorLeft"></div>
+    <div class="door door__right" ref="doorRight"></div>
+  </div>
 </template>
