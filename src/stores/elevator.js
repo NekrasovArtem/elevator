@@ -3,7 +3,6 @@ import { defineStore } from "pinia";
 
 export const useElevatorStore = defineStore("elevator", () => {
   // Элементы DOM
-  const elevator = ref(null);
   const doorLeft = ref(null);
   const doorRight = ref(null);
   const floorsButtons = ref([]);
@@ -28,7 +27,6 @@ export const useElevatorStore = defineStore("elevator", () => {
 
   // Вернуть значения по-умолчанию
   function reset() {
-    elevator.value = null;
     doorLeft.value = null;
     doorRight.value = null;
     floorsButtons.value = [];
@@ -80,16 +78,15 @@ export const useElevatorStore = defineStore("elevator", () => {
     floorsBelow.sort((a, b) => a - b).reverse();
 
     floorsQueue.value = [...floorsAbove, ...floorsBelow];
-    console.log(floorsQueue.value);
   }
 
+  // Функция изменения положения лифта
   function changeElevatorPosition(floor) {
     nextFloor.value = floor;
     transition.value = Math.abs(nextFloor.value - currentFloor.value) * 2;
   }
 
   return {
-    elevator,
     doorLeft,
     doorRight,
     floorsButtons,

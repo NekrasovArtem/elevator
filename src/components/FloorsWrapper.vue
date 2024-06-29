@@ -1,11 +1,10 @@
 <script setup>
-import { ref, onMounted } from "vue";
 import { useElevatorStore } from "@/stores/elevator";
 import { storeToRefs } from "pinia";
+import TheFloor from "./TheFloor.vue";
 
 const elevatorStore = useElevatorStore();
 const {
-  elevator,
   doorLeft,
   doorRight,
   floorsButtons,
@@ -17,29 +16,19 @@ const {
   nextFloor,
   transition,
 } = storeToRefs(elevatorStore);
-const { sortQueue, addFloorButton, changeElevatorPosition } = elevatorStore;
-
-// Функция вызова лифта
-function callElevator(floorNumber, event) {
-  event.srcElement.disabled = true;
-
-  floorsQueue.value.push(floorNumber);
-  sortQueue();
-  console.log(`Вызвать на ${floorNumber} этаж`);
-
-  if (statusMovement.value !== true) {
-    statusMovement.value = true;
-    moveElevator();
-  }
-}
+const { changeElevatorPosition } = elevatorStore;
 
 // Функция движения лифта
 function moveElevator() {
   if (floorsQueue.value.length === 0) {
+    // Вызвать лифт на первый этаж
     elevatorToFirstFloor();
     return false;
   } else {
+    // Вызвать лифт на следующий в очереди этаж
     changeElevatorPosition(floorsQueue.value.shift());
+
+    // Открыть двери лифта после того, как лифт прибыл на следующий этаж
     setTimeout(openElevatorDoors, transition.value * 1000 + 500);
   }
 }
@@ -53,6 +42,7 @@ function openElevatorDoors() {
 
   console.log(`Текущий этаж: ${currentFloor.value}`);
 
+  // Закрыть двери лифта через 4 секунды
   setTimeout(closeElevatorDoors, 4000);
 }
 
@@ -65,7 +55,9 @@ function closeElevatorDoors() {
   if (statusMovement.value === true) {
     setTimeout(() => {
       moveElevator();
-      floorsButtons.value[floorsQuantity.value - currentFloor.value].disabled = false;
+      floorsButtons.value[
+        floorsQuantity.value - currentFloor.value
+      ].disabled = false;
     }, 2500);
   }
 }
@@ -75,24 +67,15 @@ function elevatorToFirstFloor() {
   changeElevatorPosition(1);
   statusMovement.value = false;
 
+  // Открыть двери лифта
   setTimeout(openElevatorDoors, transition.value * 1000 + 500);
 }
-
-console.log(floorsButtons);
 </script>
 
 <template>
   <div class="floors__wrapper">
     <div class="floor" v-for="(item, index) in floorsArray" :key="index">
-      <div class="floor__wrapper">
-        <span class="floor__number">{{ item }}</span>
-        <button
-          class="floor__button"
-          title="Вызвать лифт"
-          @click="callElevator(item, $event)"
-          :ref="addFloorButton"
-        ></button>
-      </div>
+      <TheFloor :floorNumber="item" @moveElevator="moveElevator" />
     </div>
   </div>
 </template>
